@@ -1,188 +1,189 @@
-📊 Fama-French Factor Modeling \& Volatility Forecasting — Nifty 50 Analysis
+### **📊 Fama-French Factor Modeling \& Volatility Forecasting — Nifty 50 Analysis**
 
-This project applies the Fama-French 3-Factor Model to the Indian stock market using Nifty 50 data. It involves constructing SMB and HML factors, regressing stock excess returns, and modeling residual volatility using GARCH and EGARCH models.
+#### 
 
+This project applies the Fama-French 3-Factor Model to the Indian stock market using NIFTY 50 data. It constructs SMB and HML factors, performs excess return regression, and models volatility using GARCH and EGARCH techniques — with a focus on ICICI Bank.
 
 
-🎯 Objective
 
-To evaluate how effectively the Fama-French 3-Factor model explains return variations in Indian large-cap stocks, with a detailed analysis of ICICI Bank, and to explore persistence and asymmetry in volatility using econometric tools.
+---
 
 
 
-🔧 Methodology
+#### 🎯 Objective
 
-1\. Data Collection
 
-Period: 5-year daily data (2020–2025)
 
+To evaluate how effectively the Fama-French 3-Factor Model explains return variations in ICICI Bank, and to model \*\*volatility patterns\*\* in the residuals using econometric methods.
 
 
-Source: yfinance
 
+---
 
 
-Assets: Nifty 50 constituent stocks
 
+#### 🛠️ Methodology
 
 
-Fundamentals: Shares Outstanding, P/B Ratio
 
+1. ###### Data Collection
 
 
-Risk-Free Rate: 91-day T-Bill yield
 
+* Daily data from 2020–2025 using `yfinance`
+* Nifty 50 stocks
+* Added fundamentals: Shares Outstanding, P/B ratio
+* Risk-free rate: 91-day T-bill yield
 
 
-2\. Factor Construction
 
-SMB (Small Minus Big): Based on median market cap
+###### 2\. Factor Construction
 
 
 
-HML (High Minus Low): Top \& bottom 30% of P/B ratios
+* SMB(Small Minus Big): Size split using median market cap
+* HML(High Minus Low): Value sorted using top \& bottom 30% P/B ratios
+* MKT\\\_EXCESS: NIFTY return minus daily risk-free rate
+* Rebalanced annually on June 30
 
+###### 
 
+###### 3\. Fama-French Regression 
 
-MKT\_EXCESS: Nifty 50 daily return – daily risk-free rate
 
 
+&nbsp; ```
 
-Rebalancing: Annually on June 30
+&nbsp;Rᵢ - Rf = α + βₘ(Rₘ - Rf) + β\_SMB(SMB) + β\_HML(HML) + εᵢ
 
+&nbsp; ```
 
 
-3\. Fama-French Regression
 
-We estimate the following model:
+* &nbsp;Estimated using OLS (statsmodels)
+* &nbsp;Residuals stored for volatility modeling
 
 
 
-Copy
+---
 
-Edit
+##### 
 
-Rᵢ - R𝚏 = α + βₘ(Rₘ - R𝚏) + βₛₘ\_b(SMB) + βₕₘₗ(HML) + εᵢ
+##### 📈 ICICI Bank: Model Output
 
-Estimated via OLS using statsmodels
 
 
+###### Fama-French Regression Results
 
-Residuals extracted for volatility analysis
 
 
+| Metric   | Value     | Interpretation                         |
 
-📈 ICICI Bank — Regression Results
+| ------------- | --------- | -------------------------------------- |
 
-Metric	Value	Interpretation
+| βₘ       | ≈ 1.00    | Moves in line with the market          |
 
-Alpha (α)	~0.0003	Minimal abnormal return
+| β\\\_SMB   | –0.60     | Strong large-cap tilt                  |
 
-Beta\_MKT	≈ 1.00	Moves in line with the market
+| β\\\_HML   | +0.17     | Mild value orientation                 |
 
-Beta\_SMB	–0.60	Strong large-cap behavior
+| Adj R²   | 0.53      | Model explains 53% of return variation |
 
-Beta\_HML	+0.17	Slight value tilt
+| α (Alpha)| \\~0.0003  | Negligible abnormal return             |
 
-R²	0.53	53% of return variance explained
 
 
+---
 
-📉 GARCH(1,1) Volatility Modeling
 
-Parameter	Value	Interpretation
 
-ω	1.13e‑5	Base level of volatility
+###### GARCH(1,1) Volatility Results
 
-α₁	0.10	Moderate reaction to new market shocks
 
-β₁	0.80	Strong volatility persistence (clustering)
 
-μ	Slightly negative	Negative daily return trend over the period
 
 
+* ω  = 1.13e-5                           
+* α₁  =  0.10           
+* β₁  =  0.80    
+* α₁ + β₁ = 0.90 (volatility is highly persistent)     
 
-📁 Files in the Repository
+---
 
-ff\_factors.csv — Computed Fama-French factors (SMB, HML, MKT\_EXCESS)
 
 
+###### 📁 Files in Repository
 
-ff3\_regression\_results.csv — Regression coefficients
 
 
+* ff\_factors.csv — Constructed SMB, HML, MKT\\\_EXCESS
+* ff3\_regression\_results.csv — Stock-wise regression coefficients
+* nifty50\_fundamentals\_with\_pb.csv — Raw fundamentals
+* Presentation.pdf — Final slides
+* Summary\_report.pdf — Full project documentation
+* python\_code.ipynb — End-to-end implementation
 
-nifty50\_fundamentals\_with\_pb.csv — Raw P/B and market cap data
 
 
+---
 
-Presentation.pdf — Final slides for submission
 
 
+###### &nbsp;📚 Tools Used
 
-Summary\_report.pdf — Full project report
 
 
+* pandas`, `numpy`, `yfinance` — Data processing
+* statsmodels` — Regression analysis
+* arch` — GARCH, EGARCH volatility modeling
+* matplotlib`, `seaborn` — Visualizations
 
-python\_code.ipynb — Complete Jupyter analysis notebook
 
 
+---
 
-🛠️ Tools \& Libraries
 
-pandas, numpy, yfinance — Data handling
 
+###### ✅ Key Insights
 
 
-statsmodels — OLS regression
 
+* Fama-French model explains \\~53% of ICICI Bank’s excess returns
+* Volatility is persistent — captured well by GARCH
+* EGARCH reveals asymmetry — important for Indian market dynamics
 
 
-arch — GARCH/EGARCH volatility modeling
 
+---
 
 
-matplotlib, seaborn — Plotting and visualization
 
+###### 🚀 Future Scope
 
 
-✅ Key Takeaways
 
-The Fama-French 3-Factor model explains ~53% of ICICI Bank’s excess return variation
+* Expand to Fama-French 5-Factor Model
+* Include mid-cap and small-cap indices
+* Build interactive dashboards (e.g., Streamlit)
+* Integrate factor-based portfolio optimization
 
 
 
-GARCH(1,1) captures volatility clustering — a typical market feature
+---
 
 
 
-EGARCH has potential to model asymmetric shocks in Indian equities
+###### 👨‍💻 Author
 
 
-
-🧠 Future Scope
-
-Extend model to Fama-French 5-Factor (adding momentum \& profitability)
-
-
-
-Apply to mid-cap and small-cap stocks
-
-
-
-Integrate results into interactive dashboards (e.g., Streamlit)
-
-
-
-Build portfolio optimization tools using factor loadings
-
-
-
-👨‍💻 Author
 
 Developed by Ananta Gupta
 
 Undergraduate Research Project | IIT Kanpur
 
 Supervised by: Prof. Wasim Ahmad
+
+
+
+
 
