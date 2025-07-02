@@ -14,7 +14,7 @@ This project applies the Fama-French 3-Factor Model to the Indian stock market u
 
 
 
-To evaluate how effectively the Fama-French 3-Factor Model explains return variations in ICICI Bank, and to model \*\*volatility patterns\*\* in the residuals using econometric methods.
+To evaluate how effectively the Fama-French 3-Factor Model explains return variations in ICICI Bank, and to model volatility patterns in the residuals using econometric methods.
 
 
 
@@ -52,11 +52,7 @@ To evaluate how effectively the Fama-French 3-Factor Model explains return varia
 
 
 
-&nbsp; ```
-
 &nbsp;Rᵢ - Rf = α + βₘ(Rₘ - Rf) + β\_SMB(SMB) + β\_HML(HML) + εᵢ
-
-&nbsp; ```
 
 
 
@@ -77,11 +73,11 @@ To evaluate how effectively the Fama-French 3-Factor Model explains return varia
 
 
 
-| Metric   | Value     | Interpretation                         |
+| Metric   | Value     | Interpretation                        |
 
-| ------------- | --------- | -------------------------------------- |
 
-| βₘ       | ≈ 1.00    | Moves in line with the market          |
+
+| βₘ       | ≈ 1.00    | Moves in line with the market         |
 
 | β\\\_SMB   | –0.60     | Strong large-cap tilt                  |
 
