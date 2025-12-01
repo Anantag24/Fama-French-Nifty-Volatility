@@ -1,124 +1,147 @@
 
----
+# 📈 NIFTY 50 Return & Volatility Analysis
 
-# 📊 Fama-French Factor Modeling & Volatility Forecasting — NIFTY 50 Study
-
-This project implements the **Fama-French Three-Factor Model** on the Indian equity market using the **NIFTY 50 universe (2020–2025)**. Custom SMB and HML factors were constructed based on market capitalization and value characteristics. Factor exposures were estimated for all NIFTY 50 constituents, and volatility in model residuals was analyzed using **GARCH and EGARCH models** to capture persistence and asymmetry in return dynamics.
+### *Factor Modeling Using Fama–French + Rolling Regression + GARCH / EGARCH*
 
 ---
 
-## 🎯 Objective
+### **📌 Overview**
 
-To evaluate how effectively the **Fama-French 3-Factor Model explains excess return variation across the NIFTY 50 index**, and to model volatility behavior in residuals using econometric volatility forecasting techniques.
+This research analyzes the return behavior of the **NIFTY 50 index (2020–2025)** using the **Fama-French Three-Factor Model**, volatility diagnostics, and rolling-window sensitivity estimation. The study constructs **custom SMB and HML factors** for the Indian market and applies volatility forecasting techniques (**GARCH & EGARCH**) to detect persistence, asymmetry, and market regime dynamics.
+
+---
+
+### 🎯 **Research Objective**
+
+To evaluate whether the **Fama-French Three-Factor Model** explains excess return variation across the NIFTY 50 constituents and to examine the behavior of residual volatility using time-series econometric models.
 
 ---
 
 ## 🛠️ Methodology
 
-### **1. Data Collection**
+### **1️⃣ Data Collection**
 
 * Universe: **All NIFTY 50 stocks**
-* Frequency: **Daily data (2020–2025)**
+* Frequency: **Daily observations (2020–2025)**
 * Source: `yfinance`
-* Fundamental variables: **Market Cap, Shares Outstanding, Price-to-Book Ratio**
-* Risk-free proxy: **91-day Treasury bill yield**
+* Fundamentals: **Market Cap, Price-to-Book, Shares Outstanding**
+* Risk-free rate: **91-day Treasury Bill Yield**
 
 ---
 
-### **2. Factor Construction**
+### **2️⃣ Factor Construction**
 
-| Factor                    | Method                                              |
-| ------------------------- | --------------------------------------------------- |
-| **SMB (Small Minus Big)** | Formed by median split on market cap                |
-| **HML (High Minus Low)**  | Formed using top vs. bottom 30% based on P/B ratios |
-| **Market Excess Return**  | NIFTY Total Return Index minus daily risk-free rate |
-| **Rebalancing Frequency** | Annually on June 30                                 |
+| Factor                         | Construction Basis                        |
+| ------------------------------ | ----------------------------------------- |
+| **MKT (Market Excess Return)** | NIFTY TRI – Risk-free rate                |
+| **SMB (Small − Big)**          | Median market-cap split portfolio returns |
+| **HML (High − Low)**           | Top vs. bottom 30% portfolios by P/B      |
+
+📌 **Rebalanced annually (June 30)**
 
 ---
 
-### **3. Regression Model**
+### **3️⃣ Fama-French Regression Model**
 
 [
-R_i - R_f = \alpha + \beta_m(R_m - R_f) + \beta_{SMB}(SMB) + \beta_{HML}(HML) + \epsilon_i
+R_i - R_f = \alpha + \beta_m(R_m - R_f) + \beta_{SMB}(SMB) + \beta_{HML}(HML)
 ]
 
-* Model estimated using **OLS (statsmodels)**
-* **Residuals extracted for volatility forecasting**
+* Estimated via **OLS (`statsmodels`)**
+* Residuals stored for volatility modeling
 
 ---
 
-## 📈 Sample Factor Loadings (Example: ICICI Bank)
+## 📊 Cross-Section Results Summary (NIFTY 50)
 
-| Metric      | Value    | Interpretation                              |
-| ----------- | -------- | ------------------------------------------- |
-| βₘ          | ≈ 1.00   | Moves closely with market                   |
-| βₛₘᵦ        | –0.60    | Large-cap premium (negative SMB exposure)   |
-| βₕₘₗ        | +0.17    | Mild value tilt                             |
-| Adjusted R² | **0.53** | Model explains majority of return variation |
-| Alpha (α)   | ~0.0003  | No significant abnormal return              |
+| Metric      | α        | β_MKT  | β_SMB   | β_HML   | R²     | Adj. R² |
+| ----------- | -------- | ------ | ------- | ------- | ------ | ------- |
+| **Mean**    | 0.00019  | 0.9797 | 0.3186  | 0.0530  | 0.3442 | 0.3426  |
+| **Median**  | 0.00021  | 0.9995 | 0.4091  | -0.0138 | 0.3368 | 0.3352  |
+| **Minimum** | -0.00043 | 0.5380 | -1.3125 | -0.7107 | 0.1564 | 0.1544  |
+| **Maximum** | 0.00135  | 1.4307 | 1.7598  | 1.0861  | 0.5762 | 0.5752  |
 
----
+📌 Interpretation:
 
-## 📉 Volatility Modeling (Residuals)
-
-Using **GARCH(1,1)**:
-
-* ω = 1.13e-5
-* α₁ = 0.10
-* β₁ = 0.80
-* Persistence: **α₁ + β₁ = 0.90 → High volatility persistence**
-
-EGARCH modeling revealed **negative asymmetry (leverage effect)**, indicating volatility increases more following negative shocks — consistent with financial market behavior.
+* Market exposure averages near **1**, confirming strong systematic influence.
+* **SMB factor is positive on average**, indicating presence of a mild small-cap effect even within large-cap universe.
+* HML values cluster around **0**, suggesting weak value/growth premium within NIFTY 50.
+* Model explains ~**34% of daily excess return variance**, leaving meaningful idiosyncratic risk.
 
 ---
 
-## 📚 Files Included
+## 🔥 Case Example: ICICI BANK
 
-| File                         | Contents                                     |
-| ---------------------------- | -------------------------------------------- |
-| `ff_factors.csv`             | Market, SMB, and HML factors                 |
-| `ff3_regression_results.csv` | Factor sensitivities for all NIFTY 50 stocks |
-| `nifty_fundamentals.csv`     | Market cap, P/B, size buckets                |
-| `python_code.ipynb`          | Complete implementation pipeline             |
-| `Presentation.pdf`           | Final presentation slides                    |
-| `Summary_report.pdf`         | Research documentation                       |
-
----
-
-## 🧠 Tools & Libraries
-
-* `pandas`, `numpy`, `yfinance` — Data collection & wrangling
-* `statsmodels` — Fama-French regression
-* `arch` — GARCH & EGARCH volatility modeling
-* `matplotlib`, `seaborn` — Visualization
+| Parameter   | Value                           |
+| ----------- | ------------------------------- |
+| β_MKT       | **1.00**                        |
+| β_SMB       | **−0.60** (Large-cap tilt)      |
+| β_HML       | **+0.17** (Weak value tendency) |
+| Adjusted R² | **0.53**                        |
+| Alpha       | **≈0** → no abnormal return     |
 
 ---
 
-## ✅ Key Insights
+## 📉 Volatility Modeling Results
 
-* The **Fama-French model explains a significant share of return variation across NIFTY 50 constituents**
-* **Large-cap bias dominates**, reflected in negative SMB loadings for many benchmark components
-* **HML factor remains weak/moderate**, aligning with historically growth-oriented Indian blue-chip stocks
-* Residual volatility is **persistent and asymmetric**, validating GARCH-type structures for Indian markets
+### **GARCH(1,1)**
+
+| Parameter         | Estimate                              |
+| ----------------- | ------------------------------------- |
+| ω                 | 1.13e-5                               |
+| α₁                | 0.10                                  |
+| β₁                | 0.80                                  |
+| Persistence (α+β) | **0.90 → High volatility clustering** |
+
+### **EGARCH(1,1)**
+
+* Reveals **negative asymmetry (leverage effect)**
+  ➡️ Volatility reacts more strongly to negative news than positive shocks.
 
 ---
 
-## 🚀 Future Scope
+## 📁 Repository Contents
 
-* Extend to **Fama-French Five-Factor and Six-Factor Models**
-* Expand sample to **NIFTY 500, Midcap, and Smallcap indices**
-* Add **rolling window beta visualization and regime detection**
-* Build a **Streamlit dashboard for interactive factor analytics**
-* Perform **portfolio optimization based on factor exposures**
+| File                         | Description                                |
+| ---------------------------- | ------------------------------------------ |
+| `ff_factors.csv`             | Constructed SMB, HML, and MKT factors      |
+| `ff3_regression_results.csv` | Regression outputs for all NIFTY 50 stocks |
+| `python_code.ipynb`          | Complete workflow                          |
+| `Summary_Report.pdf`         | Full academic documentation                |
+| `Presentation.pdf`           | Slide deck version                         |
+
+---
+
+## 🧪 Tools & Libraries
+
+* `pandas`, `numpy`, `yfinance`
+* `statsmodels` (econometric estimation)
+* `arch` (GARCH & EGARCH models)
+* `matplotlib`, `seaborn` (visualization)
+
+---
+
+## 🎯 Key Takeaways
+
+* The **market factor dominates** return variation in NIFTY 50.
+* Evidence of a **mild size premium (SMB)**; growth/value effect (HML) is weak.
+* Volatility is **persistent, clustered, and asymmetric**, validating GARCH-type models.
+* The factor structure provides a strong foundation for **factor-based investing** in India.
+
+---
+
+## 🚀 Future Enhancements
+
+* Expand to **Fama-French Five-Factor and Six-Factor Models**
+* Apply **Kalman-Filter–based time-varying betas**
+* Deploy **Streamlit analytics dashboard**
+* Explore **factor-tilted portfolio construction & backtesting**
 
 ---
 
 ## 👨‍💻 Author
 
 **Ananta Gupta**
-Undergraduate Research Project — IIT Kanpur
-Supervised by **Prof. Wasim Ahmad**
-
----
-
+📍 IIT Kanpur — Undergraduate Research Project
+Mentor: **Prof. Wasim Ahmad**
 
