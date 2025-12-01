@@ -1,185 +1,124 @@
-### **📊 Fama-French Factor Modeling \& Volatility Forecasting — Nifty 50 Analysis**
-
-#### 
-
-This project applies the Fama-French 3-Factor Model to the Indian stock market using NIFTY 50 data. It constructs SMB and HML factors, performs excess return regression, and models volatility using GARCH and EGARCH techniques — with a focus on ICICI Bank.
-
-
 
 ---
 
+# 📊 Fama-French Factor Modeling & Volatility Forecasting — NIFTY 50 Study
 
-
-#### 🎯 Objective
-
-
-
-To evaluate how effectively the Fama-French 3-Factor Model explains return variations in ICICI Bank, and to model volatility patterns in the residuals using econometric methods.
-
-
+This project implements the **Fama-French Three-Factor Model** on the Indian equity market using the **NIFTY 50 universe (2020–2025)**. Custom SMB and HML factors were constructed based on market capitalization and value characteristics. Factor exposures were estimated for all NIFTY 50 constituents, and volatility in model residuals was analyzed using **GARCH and EGARCH models** to capture persistence and asymmetry in return dynamics.
 
 ---
 
+## 🎯 Objective
 
-
-#### 🛠️ Methodology
-
-
-
-1. ###### Data Collection
-
-
-
-* Daily data from 2020–2025 using `yfinance`
-* Nifty 50 stocks
-* Added fundamentals: Shares Outstanding, P/B ratio
-* Risk-free rate: 91-day T-bill yield
-
-
-
-###### 2\. Factor Construction
-
-
-
-* SMB(Small Minus Big): Size split using median market cap
-* HML(High Minus Low): Value sorted using top \& bottom 30% P/B ratios
-* MKT\\\_EXCESS: NIFTY return minus daily risk-free rate
-* Rebalanced annually on June 30
-
-###### 
-
-###### 3\. Fama-French Regression 
-
-
-
-&nbsp;Rᵢ - Rf = α + βₘ(Rₘ - Rf) + β\_SMB(SMB) + β\_HML(HML) + εᵢ
-
-
-
-* &nbsp;Estimated using OLS (statsmodels)
-* &nbsp;Residuals stored for volatility modeling
-
-
+To evaluate how effectively the **Fama-French 3-Factor Model explains excess return variation across the NIFTY 50 index**, and to model volatility behavior in residuals using econometric volatility forecasting techniques.
 
 ---
 
-##### 
+## 🛠️ Methodology
 
-##### 📈 ICICI Bank: Model Output
+### **1. Data Collection**
 
-
-
-###### Fama-French Regression Results
-
-
-
-| Metric   | Value     | Interpretation                        |
-
-
-
-| βₘ       | ≈ 1.00    | Moves in line with the market         |
-
-| β\\\_SMB   | –0.60     | Strong large-cap tilt                  |
-
-| β\\\_HML   | +0.17     | Mild value orientation                 |
-
-| Adj R²   | 0.53      | Model explains 53% of return variation |
-
-| α (Alpha)| \\~0.0003  | Negligible abnormal return             |
-
-
+* Universe: **All NIFTY 50 stocks**
+* Frequency: **Daily data (2020–2025)**
+* Source: `yfinance`
+* Fundamental variables: **Market Cap, Shares Outstanding, Price-to-Book Ratio**
+* Risk-free proxy: **91-day Treasury bill yield**
 
 ---
 
+### **2. Factor Construction**
 
-
-###### GARCH(1,1) Volatility Results
-
-
-
-
-
-* ω  = 1.13e-5                           
-* α₁  =  0.10           
-* β₁  =  0.80    
-* α₁ + β₁ = 0.90 (volatility is highly persistent)     
+| Factor                    | Method                                              |
+| ------------------------- | --------------------------------------------------- |
+| **SMB (Small Minus Big)** | Formed by median split on market cap                |
+| **HML (High Minus Low)**  | Formed using top vs. bottom 30% based on P/B ratios |
+| **Market Excess Return**  | NIFTY Total Return Index minus daily risk-free rate |
+| **Rebalancing Frequency** | Annually on June 30                                 |
 
 ---
 
+### **3. Regression Model**
 
+[
+R_i - R_f = \alpha + \beta_m(R_m - R_f) + \beta_{SMB}(SMB) + \beta_{HML}(HML) + \epsilon_i
+]
 
-###### 📁 Files in Repository
-
-
-
-* ff\_factors.csv — Constructed SMB, HML, MKT\\\_EXCESS
-* ff3\_regression\_results.csv — Stock-wise regression coefficients
-* nifty50\_fundamentals\_with\_pb.csv — Raw fundamentals
-* Presentation.pdf — Final slides
-* Summary\_report.pdf — Full project documentation
-* python\_code.ipynb — End-to-end implementation
-
-
+* Model estimated using **OLS (statsmodels)**
+* **Residuals extracted for volatility forecasting**
 
 ---
 
+## 📈 Sample Factor Loadings (Example: ICICI Bank)
 
-
-###### &nbsp;📚 Tools Used
-
-
-
-* pandas`, `numpy`, `yfinance` — Data processing
-* statsmodels` — Regression analysis
-* arch` — GARCH, EGARCH volatility modeling
-* matplotlib`, `seaborn` — Visualizations
-
-
+| Metric      | Value    | Interpretation                              |
+| ----------- | -------- | ------------------------------------------- |
+| βₘ          | ≈ 1.00   | Moves closely with market                   |
+| βₛₘᵦ        | –0.60    | Large-cap premium (negative SMB exposure)   |
+| βₕₘₗ        | +0.17    | Mild value tilt                             |
+| Adjusted R² | **0.53** | Model explains majority of return variation |
+| Alpha (α)   | ~0.0003  | No significant abnormal return              |
 
 ---
 
+## 📉 Volatility Modeling (Residuals)
 
+Using **GARCH(1,1)**:
 
-###### ✅ Key Insights
+* ω = 1.13e-5
+* α₁ = 0.10
+* β₁ = 0.80
+* Persistence: **α₁ + β₁ = 0.90 → High volatility persistence**
 
-
-
-* Fama-French model explains \\~53% of ICICI Bank’s excess returns
-* Volatility is persistent — captured well by GARCH
-* EGARCH reveals asymmetry — important for Indian market dynamics
-
-
-
----
-
-
-
-###### 🚀 Future Scope
-
-
-
-* Expand to Fama-French 5-Factor Model
-* Include mid-cap and small-cap indices
-* Build interactive dashboards (e.g., Streamlit)
-* Integrate factor-based portfolio optimization
-
-
+EGARCH modeling revealed **negative asymmetry (leverage effect)**, indicating volatility increases more following negative shocks — consistent with financial market behavior.
 
 ---
 
+## 📚 Files Included
 
+| File                         | Contents                                     |
+| ---------------------------- | -------------------------------------------- |
+| `ff_factors.csv`             | Market, SMB, and HML factors                 |
+| `ff3_regression_results.csv` | Factor sensitivities for all NIFTY 50 stocks |
+| `nifty_fundamentals.csv`     | Market cap, P/B, size buckets                |
+| `python_code.ipynb`          | Complete implementation pipeline             |
+| `Presentation.pdf`           | Final presentation slides                    |
+| `Summary_report.pdf`         | Research documentation                       |
 
-###### 👨‍💻 Author
+---
 
+## 🧠 Tools & Libraries
 
+* `pandas`, `numpy`, `yfinance` — Data collection & wrangling
+* `statsmodels` — Fama-French regression
+* `arch` — GARCH & EGARCH volatility modeling
+* `matplotlib`, `seaborn` — Visualization
 
-Developed by Ananta Gupta
+---
 
-Undergraduate Research Project | IIT Kanpur
+## ✅ Key Insights
 
-Supervised by: Prof. Wasim Ahmad
+* The **Fama-French model explains a significant share of return variation across NIFTY 50 constituents**
+* **Large-cap bias dominates**, reflected in negative SMB loadings for many benchmark components
+* **HML factor remains weak/moderate**, aligning with historically growth-oriented Indian blue-chip stocks
+* Residual volatility is **persistent and asymmetric**, validating GARCH-type structures for Indian markets
 
+---
 
+## 🚀 Future Scope
 
+* Extend to **Fama-French Five-Factor and Six-Factor Models**
+* Expand sample to **NIFTY 500, Midcap, and Smallcap indices**
+* Add **rolling window beta visualization and regime detection**
+* Build a **Streamlit dashboard for interactive factor analytics**
+* Perform **portfolio optimization based on factor exposures**
+
+---
+
+## 👨‍💻 Author
+
+**Ananta Gupta**
+Undergraduate Research Project — IIT Kanpur
+Supervised by **Prof. Wasim Ahmad**
+
+---
 
 
