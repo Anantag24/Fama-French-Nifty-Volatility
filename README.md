@@ -49,25 +49,20 @@ To examine whether the Fama–French model explains cross-sectional variation in
 
 ### **3️⃣ Fama-French Regression Model**
 
+
 The excess return of each stock is modeled as:
 
 $$
-R_i - R_f = \alpha
-
-* \beta_m (R_m - R_f)
-* \beta_{SMB} \cdot SMB
-* \beta_{HML} \cdot HML
-  $$
+R_i - R_f = \alpha + \beta_m (R_m - R_f) + \beta_{SMB} \cdot SMB + \beta_{HML} \cdot HML
+$$
 
 Where:
 
-* ( \alpha ) → abnormal return
-* ( \beta_m ) → sensitivity to market excess return
-* ( \beta_{SMB} ) → size premium exposure
-* ( \beta_{HML} ) → value–growth exposure
+- \( \alpha \) → abnormal return  
+- \( \beta_m \) → sensitivity to market excess return  
+- \( \beta_{SMB} \) → size exposure (small vs. large-cap behavior)  
+- \( \beta_{HML} \) → value–growth exposure  
 
-✔ Estimated using **OLS (`statsmodels`)**
-✔ **Residuals used for volatility forecasting**
 
 ---
 
